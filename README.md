@@ -1,4 +1,5 @@
-Colorful application
+#Colorful application
+
 Just tap anywhere on the screen to change background color.
 
 Usage
