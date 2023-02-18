@@ -1,46 +1,60 @@
-import 'dart:math' as math;
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:solid_lints/analysis_options.yaml';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
-
+class MyApp extends StatelessWidget {
   @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  late Color randomColor;
-
-  @override
-  void initState() {
-    changeBackgroundColor();
-    super.initState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'My App',
+      home: MyHomePage(),
+    );
   }
+}
 
-  void changeBackgroundColor() {
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  Color? _backgroundColor ;
+  Color? _textColor ;
+
+  void _changeBackgroundColor() {
     setState(() {
-      randomColor =
-          Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1);
+      final color = Color.fromARGB(
+        255,
+        Random().nextInt(256),
+        Random().nextInt(256),
+        Random().nextInt(256),
+      );
+      _backgroundColor = color;
+      // Check the luminance of the color and set the text color accordingly
+      _textColor = color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
     });
   }
 
   @override
+  void initState() {
+    super.initState();
+    _changeBackgroundColor();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        backgroundColor: randomColor,
-        body: TextButton(
-          onPressed: changeBackgroundColor,
-          child: const Center(
-            child: Text(
-              'Hi there',
-              style: TextStyle(color: Colors.black, fontSize: 20),
-            ),
+    return GestureDetector(
+      onTap: _changeBackgroundColor,
+      child: Scaffold(
+        backgroundColor: _backgroundColor,
+        body: Center(
+          child: Text(
+            'Hey there',
+            style: TextStyle(fontSize: 24.0, color: _textColor),
           ),
         ),
       ),
